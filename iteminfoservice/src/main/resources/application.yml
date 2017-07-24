@@ -1,0 +1,49 @@
+server:
+  port: 9001
+  error:
+    whitelabel:
+      enabled: false
+
+item:
+  provider: local-iteminfo
+  
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 20
+    lease-expiration-duration-in-seconds: 60
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+    homePageUrl: http://${eureka.instance.hostname}:${server.port}/
+    metadata-map:
+      zone: zone1
+      cluster: business
+      management.port: ${management.port:7879}
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    healthcheck:
+      enabled: true
+
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: iteminfo.log
+  level:
+    com.springframework.cloud.netflix.eureka: debug
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
+
+management:
+  security:
+    enabled: false
+  port: 7879
+  info:
+    git:
+      mode: full
+  context-path: /manage
+---
+spring:
+  profiles: dockerC
+  
+discovery:
+  host: eurekad

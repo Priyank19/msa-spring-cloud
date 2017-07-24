@@ -1,0 +1,6 @@
+item:
+  provider: Amazon2.com
+
+logging:
+  level:
+    root: INFO

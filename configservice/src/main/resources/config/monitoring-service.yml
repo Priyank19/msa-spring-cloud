@@ -1,0 +1,6 @@
+item:
+  provider: Nagios.com
+
+logging:
+  level:
+    root: INFO

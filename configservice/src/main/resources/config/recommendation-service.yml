@@ -1,0 +1,6 @@
+item:
+  provider: MouthShut.com
+
+logging:
+  level:
+    root: INFO

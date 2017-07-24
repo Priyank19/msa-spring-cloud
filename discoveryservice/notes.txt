@@ -1,0 +1,70 @@
+Run this server:
+-----------------
+mvn spring-boot:run
+
+Authenticating with the Eureka Server
+-------------------------------------
+http://user:password@localhost:8761/eureka - Basic authentication.
+
+For more complex needs you can create a @Bean of type DiscoveryClientOptionalArgs and 
+inject ClientFilter instances into it, all of which will be applied to the calls from the client to the server.
+
+Status Page and Health Indicator
+---------------------------------
+application.yml
+eureka:
+  instance:
+    statusPageUrlPath: ${management.context-path}/info
+    healthCheckUrlPath: ${management.context-path}/health
+    
+Securing Eureka Server
+-----------------------
+eureka.instance.[nonSecurePortEnabled,securePortEnabled]=[false,true]
+
+application.yml
+eureka:
+  instance:
+    statusPageUrl: https://${eureka.hostname}/info
+    healthCheckUrl: https://${eureka.hostname}/health
+    homePageUrl: https://${eureka.hostname}/
+
+-- the above variable is from netflix native; spring also provides ${eureka.instance.hostName}  
+
+If your app is running behind a proxy, and the SSL termination is in the proxy then 
+you will need to ensure that the proxy "forwarded" headers are intercepted and handled by the application.
+
+Health Check
+------------
+Surprisingly not enabled by default. Once registered successfully - its always UP.
+application.yml
+eureka:
+  client:
+    healthcheck:
+      enabled: true  
+      
+Metadata
+--------
+eureka.instance.metadataMap
+
+-- TODO
+eureka.instance.metadataMap.instanceId=${spring.application.name}:${random.int|value}
+ how do you register multiple instances ??
+
+-- TODO
+eureka.instance.metadataMap.zone=zone1
+eureka.client.preferSameZoneEureka = true
+ this is logical 1st try your own zone before looking out.
+
+Lease Renewal
+-------------
+eureka.instance.leaseRenewalIntervalInSeconds -- its better to wait using default. 
+
+Multiple Eureka Servers
+-----------------------
+eureka.instance.hostname: hostA 
+eureka.client.serviceUrl.defaultZone: http://hostB:8761/eureka/
+ implies hostA will now register with hostB and vice-versa will thus enable peer-communication.
+ 
+eureka.instance.preferIpAddress=true
+      
+      

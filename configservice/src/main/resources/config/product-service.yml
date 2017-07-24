@@ -1,0 +1,6 @@
+item:
+  provider: Shopclues.com
+
+logging:
+  level:
+    root: INFO

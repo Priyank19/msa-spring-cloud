@@ -1,0 +1,55 @@
+server:
+  port: 9008
+  error:
+    whitelabel:
+      enabled: false
+
+item.provider: local-reco
+
+eureka:
+  instance:
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 20
+    leaseExpirationDurationInSeconds: 60
+#    statusPageUrlPath: ${management.context-path}/info
+#    healthCheckUrlPath: ${management.context-path}/health
+    homePageUrl: http://${eureka.instance.hostname}:${server.port}/
+    metadata-map:
+      zone: zone1
+      cluster: business
+      management.port: ${management.port:7881}
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    healthcheck:
+      enabled: true
+
+spring:
+  cloud:
+    config:
+      enabled: true
+      discovery:
+        enabled: true
+        serviceId: configservice
+
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: recommendation.log
+  level:
+    com.springframework.cloud.netflix.eureka: DEBUG
+    
+management:
+  security:
+    enabled: false
+  port: 7881
+  context-path: /manage
+
+---
+spring:
+  profiles: dockerC
+discovery:
+    host: eurekad
+    
+    

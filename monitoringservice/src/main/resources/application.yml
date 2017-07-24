@@ -1,0 +1,44 @@
+server:
+  port: 7979
+  error:
+    whitelabel:
+      enabled: false
+ 
+eureka:
+  instance:
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    healthcheck:
+      enabled: true
+
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: monitoring.log
+  level:
+    com.springframework.cloud.netflix.eureka: debug
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
+
+management:
+  security:
+    enabled: false
+  port: 7890
+
+turbine:
+  aggregator:
+    clusterConfig: business
+  clusterNameExpression: metadata['cluster']
+  appConfig: product-service, recommendation-service
+  combineHostPort: true
+  instanceUrlSuffix: /manage/hystrix.stream
+
+---
+spring:
+  profiles: dockerC
+  
+discovery:
+  host: eurekad

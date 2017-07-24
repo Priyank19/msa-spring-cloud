@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: api-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: false
+# Use Eureka to find config server. So that I can always find Config service. Use the name below
+      discovery:
+        enabled: true
+        service-id: config-service
+# TODO
+# Try 6 timesx1sec if spring-retry with spring-boot-starter-aop in classpath.   
+# spring.cloud.config.retry.*
+# Add eureka.instance.metadataMap.user password on Config Server and spring.cloud.config.username & password on client

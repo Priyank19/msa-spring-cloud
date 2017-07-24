@@ -1,0 +1,42 @@
+server:
+  port: 8761
+  error:
+    whitelabel:
+      enabled: false
+
+eureka:
+  instance:
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+    lease-expiration-duration-in-seconds: 90
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${discovery.host:localhost}:${server.port:8761}/eureka/
+  server:
+    enableSelfPreservation: true
+# wait for 1 sec after sync with peer eureka fails before responding to clients.
+    waitTimeInMsWhenSyncEmpty: 1000
+
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: discovery.log
+  level:
+    com.springframework.cloud.netflix.eureka: debug
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
+
+management:
+  security:
+    enabled: false
+  port: 7878
+
+---
+spring:
+  profiles: dockerC
+  
+discovery:
+  host: eurekad
+    

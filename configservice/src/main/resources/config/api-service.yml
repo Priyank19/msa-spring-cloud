@@ -1,0 +1,6 @@
+item:
+  provider: Apigee.com
+
+logging:
+  level:
+    root: INFO

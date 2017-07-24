@@ -1,0 +1,75 @@
+server:
+  port: 9005
+  error:
+    whitelabel:
+      enabled: false
+
+item:
+  provider: local-api
+  
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 20
+    lease-expiration-duration-in-seconds: 60
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+    homePageUrl: http://${eureka.instance.hostname}:${server.port}/
+    metadata-map:
+      zone: zone1
+      cluster: business
+      management.port: ${management.port:7883}
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    healthcheck:
+      enabled: true
+
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: api.log
+  level:
+    com.springframework.cloud.netflix.eureka: debug
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
+
+management:
+  security:
+    enabled: false
+  port: 7883
+  context-path: /manage
+  
+zuul:
+  prefix: /api
+  ignoredServices: '*'
+  routes:
+    iteminfoservice:
+      path: /item/**
+      url: http://localhost:9001
+    productservice:
+      path: /product/**
+      serviceId: PRODUCT-SERVICE
+
+# serviceId works till ribbon.eureka.enabled: true else url
+
+# command could be default for all services
+# First Hystrix timeout
+hystrix:
+  command:
+    PRODUCT-SERVICE:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+# Now ribbon timeout
+PRODUCT-SERVICE:
+  ribbon:
+    ReadTimeout: 15000
+    ConnectTimeout: 15000
+
+---
+spring:
+  profiles: dockerC
+discovery:
+  host: eurekad

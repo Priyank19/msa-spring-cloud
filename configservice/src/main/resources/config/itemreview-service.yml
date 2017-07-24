@@ -1,0 +1,6 @@
+item:
+  provider: Amazon4.com
+
+logging:
+  level:
+    root: INFO

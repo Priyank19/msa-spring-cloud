@@ -1,0 +1,63 @@
+server:
+  port: 9009
+  error:
+    whitelabel:
+      enabled: false
+
+item:
+  provider: local.com
+
+eureka:
+  instance:
+    hostname: ${discovery.host:localhost}
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 20
+    leaseExpirationDurationInSeconds: 60
+#    statusPageUrlPath: ${management.context-path}/info
+#    healthCheckUrlPath: ${management.context-path}/health
+    homePageUrl: http://${eureka.instance.hostname}:${server.port}/
+    metadata-map:
+      zone: zone1
+      cluster: business
+      management.port: ${management.port:8084}
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+    healthcheck:
+      enabled: true
+
+spring:
+  cloud:
+    config:
+      enabled: true
+      discovery:
+        enabled: true
+        serviceId: configservice
+      
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: productservice.log
+  level:
+    com.springframework.cloud.netflix.eureka: DEBUG
+    com.example.product: DEBUG
+    
+management:
+  security:
+    enabled: false
+  port: 8084
+  context-path: /manage
+  
+ITEMINFO-SERVICE:
+  ribbon:
+    eureka:
+      enabled: true # Not effective so far - needs to go in code else disable app wide.
+    listOfServers: localhost:9001
+    ServerListRefreshInterval: 15000
+# Although effective but disables eureka completely - ribbon.eureka.enabled: true
+  
+---
+spring:
+  profiles: dockerC
+discovery:
+    host: eurekad

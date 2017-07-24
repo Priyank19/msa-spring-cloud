@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: itemreview-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: false
+# Try 6 timesx1sec if spring-retry with spring-boot-starter-aop in classpath.   
+# spring.cloud.config.retry.*
+ 
